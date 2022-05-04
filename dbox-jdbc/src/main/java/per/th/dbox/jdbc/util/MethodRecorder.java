@@ -1,13 +1,9 @@
 package per.th.dbox.jdbc.util;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -80,36 +76,6 @@ class MethodRecorder<T>
 
     interface ReturnValueHolder {
         Object getReturnValue(Class<?> clazz);
-    }
-
-    static class Invocation {
-
-        final Object proxy;
-        final Method method;
-        final Object[] arguments;
-
-        Invocation(Object proxy, Method method, Object[] arguments) {
-            this.proxy = proxy;
-            this.method = method;
-            this.arguments = arguments;
-        }
-
-        Object invoke(Object target) throws Throwable {
-            try {
-                return method.invoke(target, arguments);
-            } catch (InvocationTargetException e) {
-                if (e.getCause() != null) {
-                    throw e.getCause();
-                } else {
-                    throw e;
-                }
-            }
-        }
-
-        @Override
-        public String toString() {
-            return proxy.getClass() + ":" + method.toString();
-        }
     }
 
     public static <T> MethodRecorder<T> get(Class<T> clazz) {

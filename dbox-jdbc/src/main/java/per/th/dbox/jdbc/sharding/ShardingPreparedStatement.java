@@ -27,11 +27,6 @@ class ShardingPreparedStatement
     }
 
     @Override
-    protected ShardingPreparedStatement obtainTargetObject() throws SQLException {
-        return null;
-    }
-
-    @Override
     public boolean execute() throws SQLException {
         return this.execute(originalSql);
     }

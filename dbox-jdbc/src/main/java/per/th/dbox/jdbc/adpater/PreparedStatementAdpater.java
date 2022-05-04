@@ -2,6 +2,7 @@ package per.th.dbox.jdbc.adpater;
 
 import per.th.dbox.jdbc.adpater.option.JdbcOptionKey;
 import per.th.dbox.jdbc.adpater.option.JdbcOptions;
+import per.th.dbox.jdbc.adpater.param.JdbcParameters;
 import per.th.dbox.jdbc.unsupport.UnsupportedPreparedStatement;
 
 import java.lang.reflect.Method;
@@ -27,6 +28,12 @@ class PreparedStatementAdpater<T extends PreparedStatement>
     public static JdbcOptionKey<String[]> COLUMN_NAMES = JdbcOptionKey.of("columnNames");
 
     private JdbcOptions options = new JdbcOptions();
+    private JdbcParameters parameters = new JdbcParameters();
+
+    @Override
+    protected T obtainTargetObject() throws SQLException {
+        return (T) parameters.getProxy();
+    }
 
     // ------------------------------------------------------------ Option Operation
 
@@ -399,18 +406,4 @@ class PreparedStatementAdpater<T extends PreparedStatement>
         return this.executeUpdate(sql);
     }
 
-    public static void main(String[] args) {
-        Method[] methods = PreparedStatementAdpater.class.getMethods();
-        for (Method method : methods) {
-            if (match(method)) {
-                System.out.println(String.format("public JdbcParameter()"));
-            }
-        }
-    }
-
-    private static boolean match(Method m) {
-        return m.getName().startsWith("set")
-                && m.getParameterCount() > 0
-                && m.getParameterTypes()[0] == int.class;
-    }
 }
